@@ -39,6 +39,10 @@
                 <div class="navigation">
                     <h2>Navigation</h2>
                     {# Add here N/S/E/W buttons #}
+                    <a class="links" href="{{ path('moveDirection', {direction: 'N'}) }}">N</a>
+                    <a class="links" href="{{ path('moveDirection', {direction: 'S'}) }}">S</a>
+                    <a class="links" href="{{ path('moveDirection', {direction: 'E'}) }}">E</a>
+                    <a class="links" href="{{ path('moveDirection', {direction: 'W'}) }}">W</a>
                 </div>
             </div>
         </div>
