@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Entity\Boat;
 use App\Form\BoatType;
 use App\Repository\BoatRepository;
+use App\Services\MapManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-// to throw an error if the road does not exist :
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -37,7 +37,7 @@ class BoatController extends AbstractController
      * Move the boat in the choosen direction
      * @Route("/direction/{direction}", name="moveDirection", requirements={"direction"="[NSEW]{1}"})
      */
-    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em): Response
+    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $tileExist): Response
     {
         $boat = $boatRepository->findOneBy([]);
         $x = $boat->getCoordX();
@@ -45,35 +45,27 @@ class BoatController extends AbstractController
 
         switch ($direction) {
             case 'N':
-                if ($y > 0) {
-                    $boat->setCoordX($x);
-                    $boat->setCoordY($y - 1);
-                }
+                $y -= 1;
 
                 break;
             case 'S':
-                if ($y < 5) {
-                    $boat->setCoordX($x);
-                    $boat->setCoordY($y + 1);
-                }
+                $y += 1;
 
                 break;
             case 'E':
-                if ($x < 11) {
-                    $boat->setCoordX($x + 1);
-                    $boat->setCoordY($y);
-                }
+                $x += 1;
                 break;
             case 'W':
-                if ($x > 0) {
-                    $boat->setCoordX($x - 1);
-                    $boat->setCoordY($y);
-                }
+                $x -= 1;
                 break;
             default:
                 throw new NotFoundHttpException('Sorry this direction does not exist!');
         }
-
+        $test = $tileExist->tileExists($x, $y);
+        if ($test) {
+            $boat->setCoordX($x);
+            $boat->setCoordY($y);
+        }
         $em->flush();
 
         return $this->redirectToRoute('map');
