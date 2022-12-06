@@ -48,10 +48,14 @@ class MapController extends AbstractController
         $boat->setCoordY(0);
         $em->flush();
 
-        //get a random island for the treasure
-        $randomIsland = $mapManager->getRandomIsland();
-        dd($randomIsland);
-        $island = $tiles->findOneBy(['id' => $randomIsland]);
+        //get a random island for the treasure and reset the previous one
+        $deleteTreasure = $mapManager->findOneBy(['hasTreasure' => 'true']);
+        if ($deleteTreasure) {
+            $deleteTreasure->setHasTreasure(false);
+        }
+        $em->flush();
+        $mapManager->getRandomIsland()->setHasTreasure(true);
+        $em->flush();
 
         return $this->render('map/index.html.twig', [
             'map' => $map ?? [],
