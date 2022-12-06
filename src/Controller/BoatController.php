@@ -65,8 +65,10 @@ class BoatController extends AbstractController
         if ($test) {
             $boat->setCoordX($x);
             $boat->setCoordY($y);
+            $em->flush();
+        } else {
+            $this->addFlash('message', '❌ No way ! You can\'t go over there !!!!<br>⛵️ Please try another direction 🧭');
         }
-        $em->flush();
 
         return $this->redirectToRoute('map');
     }
