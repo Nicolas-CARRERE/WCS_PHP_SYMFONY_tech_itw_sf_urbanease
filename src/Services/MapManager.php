@@ -6,6 +6,14 @@ use App\Repository\TileRepository;
 
 class MapManager extends TileRepository
 {
+    public function tileTypeOf(int $x, int $y): ?string
+    {
+        // Here, we will check the type of the tile according to its coordinates
+        $db = $this->findOneBy(['coordX' => $x, 'coordY' => $y])->getType();
+        //dd($db);
+        return $db;
+
+    }
     public function tileExists(int $x, int $y): bool
     {
         // Here, we will check if the boat is in the map

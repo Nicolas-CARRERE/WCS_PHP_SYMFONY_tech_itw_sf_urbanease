@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,7 +38,7 @@ class BoatController extends AbstractController
      * Move the boat in the choosen direction
      * @Route("/direction/{direction}", name="moveDirection", requirements={"direction"="[NSEW]{1}"})
      */
-    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $tileExist): Response
+    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $tileExist, SessionInterface $session): Response
     {
         $boat = $boatRepository->findOneBy([]);
         $x = $boat->getCoordX();
@@ -65,9 +66,11 @@ class BoatController extends AbstractController
         if ($test) {
             $boat->setCoordX($x);
             $boat->setCoordY($y);
+            $typeOfTile = $tileExist->tileTypeOf($x, $y);
+            $session->set('typeOfTile', $typeOfTile);
             $em->flush();
         } else {
-            $this->addFlash('message', '❌ No way ! You can\'t go over there !!!!<br>⛵️ Please try another direction 🧭');
+            $this->addFlash('label', '❌ No way ! You can\'t go over there !!!!<br>⛵️ Please try another direction 🧭');
         }
 
         return $this->redirectToRoute('map');
