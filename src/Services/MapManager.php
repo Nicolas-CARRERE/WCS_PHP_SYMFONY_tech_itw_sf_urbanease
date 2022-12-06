@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Tile;
 use App\Repository\TileRepository;
 
 class MapManager extends TileRepository
@@ -35,10 +36,13 @@ class MapManager extends TileRepository
         return false;
 
     }
-    public function getRandomIsland(): ?int
+    public function getRandomIsland(): ?Tile
     {
         // Here, we will look for a random island
-        return array_rand($this->findAll([]), 1);
+        $islands = $this->findBy(['type' => 'island']);
+        $randomIslandById = array_rand($islands);
+        $randomIsland = $islands[$randomIslandById];
+        return $randomIsland;
     }
 
 }
