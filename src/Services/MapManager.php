@@ -10,7 +10,6 @@ class MapManager extends TileRepository
     {
         // Here, we will check the type of the tile according to its coordinates
         $db = $this->findOneBy(['coordX' => $x, 'coordY' => $y])->getType();
-        //dd($db);
         return $db;
 
     }
@@ -35,6 +34,11 @@ class MapManager extends TileRepository
         }
         return false;
 
+    }
+    public function getRandomIsland(): ?int
+    {
+        // Here, we will look for a random island
+        return array_rand($this->findAll([]), 1);
     }
 
 }
