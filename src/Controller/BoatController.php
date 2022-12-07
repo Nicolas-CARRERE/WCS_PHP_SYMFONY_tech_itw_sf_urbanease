@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Boat;
 use App\Form\BoatType;
 use App\Repository\BoatRepository;
+use App\Services\MapManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,17 +24,59 @@ class BoatController extends AbstractController
      * Move the boat to coord x,y
      * @Route("/move/{x}/{y}", name="moveBoat", requirements={"x"="\d+", "y"="\d+"}))
      */
-    public function moveBoat(int $x, int $y, BoatRepository $boatRepository, EntityManagerInterface $em) :Response
+    public function moveBoat(int $x, int $y, BoatRepository $boatRepository, EntityManagerInterface $em): Response
     {
         $boat = $boatRepository->findOneBy([]);
         $boat->setCoordX($x);
         $boat->setCoordY($y);
-
         $em->flush();
 
         return $this->redirectToRoute('map');
     }
 
+    /**
+     * Move the boat in the choosen direction
+     * @Route("/direction/{direction}", name="moveDirection", requirements={"direction"="[NSEW]{1}"})
+     */
+    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $tileExist, SessionInterface $session): Response
+    {
+        $boat = $boatRepository->findOneBy([]);
+        $x = $boat->getCoordX();
+        $y = $boat->getCoordY();
+
+        switch ($direction) {
+            case 'N':
+                $y -= 1;
+
+                break;
+            case 'S':
+                $y += 1;
+
+                break;
+            case 'E':
+                $x += 1;
+                break;
+            case 'W':
+                $x -= 1;
+                break;
+            default:
+                throw new NotFoundHttpException('Sorry this direction does not exist!');
+        }
+        if ($tileExist->tileExists($x, $y)) {
+            $boat->setCoordX($x);
+            $boat->setCoordY($y);
+            $typeOfTile = $tileExist->tileTypeOf($x, $y);
+            $session->set('typeOfTile', $typeOfTile);
+            if ($tileExist->checkTreasure($boat)) {
+                $this->addFlash('label', '🪙🪙🪙 YEEEEEEEESSSSSSSS ! You did it ! You have found the treasure! You are a good treasure hunter 🪙🪙🪙');
+            }
+            $em->flush();
+        } else {
+            $this->addFlash('label', '❌ No way ! You can\'t go over there !!!!<br>⛵️ Please try another direction 🧭');
+        }
+
+        return $this->redirectToRoute('map');
+    }
 
     /**
      * @Route("/", name="boat_index", methods="GET")
@@ -44,8 +89,7 @@ class BoatController extends AbstractController
     /**
      * @Route("/new", name="boat_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request): Response {
         $boat = new Boat();
         $form = $this->createForm(BoatType::class, $boat);
         $form->handleRequest($request);

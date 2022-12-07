@@ -114,3 +114,17 @@
 h2 {
   font-size: 1.3em;
 }
+
+/* to add style on  links */
+.links {
+  background-color: lightgrey;
+  border-radius: 2px;
+  border: none;
+  height: 25px;
+  width: 25px;
+  margin: 0.1em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
