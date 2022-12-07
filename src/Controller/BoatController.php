@@ -62,12 +62,14 @@ class BoatController extends AbstractController
             default:
                 throw new NotFoundHttpException('Sorry this direction does not exist!');
         }
-        $test = $tileExist->tileExists($x, $y);
-        if ($test) {
+        if ($tileExist->tileExists($x, $y)) {
             $boat->setCoordX($x);
             $boat->setCoordY($y);
             $typeOfTile = $tileExist->tileTypeOf($x, $y);
             $session->set('typeOfTile', $typeOfTile);
+            if ($tileExist->checkTreasure($boat)) {
+                $this->addFlash('label', '🪙🪙🪙 YEEEEEEEESSSSSSSS ! You did it ! You have found the treasure! You are a good treasure hunter 🪙🪙🪙');
+            }
             $em->flush();
         } else {
             $this->addFlash('label', '❌ No way ! You can\'t go over there !!!!<br>⛵️ Please try another direction 🧭');
