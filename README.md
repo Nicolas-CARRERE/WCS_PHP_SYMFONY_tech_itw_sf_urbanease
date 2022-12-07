@@ -6,7 +6,7 @@ Launch your server and read the instructions.
 
 ## Requirements
 
-- Php ^8.0 http://php.net/manual/fr/install.php;
+- Php ^8.1 http://php.net/manual/fr/install.php;
 - Composer https://getcomposer.org/download/;
 
 ## Installation
