@@ -28,11 +28,13 @@ COPY composer.json composer.lock ./
 RUN composer config audit.ignore 'PKSA-rkkf-636k-qjb3' 'PKSA-wws7-mr54-jsny' 'PKSA-w2tw-kmfg-rt9s' 'PKSA-365x-2zjk-pt47' 'PKSA-b35n-565h-rs4q' 'PKSA-t4rz-hp2g-57t1' && \
     composer update --no-interaction --optimize-autoloader --no-scripts
 
+# Create var directories with proper structure before copying app code
+RUN mkdir -p var/cache var/log && \
+    chown -R www-data:www-data var/ && \
+    chmod -R 777 var/
+
 # Copy the rest of the application
 COPY . .
-
-# Set proper permissions for var and cache
-RUN chown -R www-data:www-data var/
 
 EXPOSE 9000
 CMD ["php-fpm"]
