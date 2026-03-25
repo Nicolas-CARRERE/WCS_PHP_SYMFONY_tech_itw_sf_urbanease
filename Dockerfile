@@ -20,8 +20,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy existing application code
 COPY . .
 
-# Install dependencies
-RUN composer install --no-interaction --optimize-autoloader
+# Install dependencies (skip scripts to avoid symfony-cmd requirement)
+RUN composer install --no-interaction --optimize-autoloader --no-scripts
 
 # Create var directory if it doesn't exist (for cache/logs)
 RUN mkdir -p var/cache var/log
