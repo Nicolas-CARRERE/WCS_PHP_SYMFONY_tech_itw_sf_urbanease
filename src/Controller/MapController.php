@@ -19,14 +19,18 @@ class MapController extends AbstractController
     {
         $tiles = $em->getRepository(Tile::class)->findAll();
 
+        $map = [];
         foreach ($tiles as $tile) {
             $map[$tile->getCoordX()][$tile->getCoordY()] = $tile;
         }
 
         $boat = $boatRepository->findOneBy([]);
+        if (!$boat) {
+            throw $this->createNotFoundException('No boat found');
+        }
 
         return $this->render('map/index.html.twig', [
-            'map'  => $map ?? [],
+            'map'  => $map,
             'boat' => $boat,
         ]);
     }

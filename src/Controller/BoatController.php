@@ -20,11 +20,14 @@ class BoatController extends AbstractController
 
     /**
      * Move the boat to coord x,y
-     * @Route("/move/{x}/{y}", name="moveBoat", requirements={"x"="\d+", "y"="\d+"}))
+     * @Route("/move/{x}/{y}", name="moveBoat", requirements={"x"="\d+", "y"="\d+"})
      */
     public function moveBoat(int $x, int $y, BoatRepository $boatRepository, EntityManagerInterface $em) :Response
     {
         $boat = $boatRepository->findOneBy([]);
+        if (!$boat) {
+            throw $this->createNotFoundException('No boat found');
+        }
         $boat->setCoordX($x);
         $boat->setCoordY($y);
 
@@ -40,6 +43,9 @@ class BoatController extends AbstractController
     public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $mapManager): Response
     {
         $boat = $boatRepository->findOneBy([]);
+        if (!$boat) {
+            throw $this->createNotFoundException('No boat found');
+        }
         
         $newX = $boat->getCoordX();
         $newY = $boat->getCoordY();
@@ -88,14 +94,13 @@ class BoatController extends AbstractController
     /**
      * @Route("/new", name="boat_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $boat = new Boat();
         $form = $this->createForm(BoatType::class, $boat);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($boat);
             $em->flush();
 
@@ -119,13 +124,13 @@ class BoatController extends AbstractController
     /**
      * @Route("/{id}/edit", name="boat_edit", methods="GET|POST")
      */
-    public function edit(Request $request, Boat $boat): Response
+    public function edit(Request $request, Boat $boat, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(BoatType::class, $boat);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em->flush();
 
             return $this->redirectToRoute('boat_index', ['id' => $boat->getId()]);
         }
@@ -139,10 +144,9 @@ class BoatController extends AbstractController
     /**
      * @Route("/{id}", name="boat_delete", methods="DELETE")
      */
-    public function delete(Request $request, Boat $boat): Response
+    public function delete(Request $request, Boat $boat, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete' . $boat->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
             $em->remove($boat);
             $em->flush();
         }
