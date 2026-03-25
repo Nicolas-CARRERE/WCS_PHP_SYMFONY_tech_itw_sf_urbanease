@@ -78,9 +78,9 @@ class Tile
         return $this;
     }
 
-    public function getHasTreasure(): ?bool
+    public function getHasTreasure(): bool
     {
-        return $this->hasTreasure;
+        return (bool) $this->hasTreasure;
     }
 
     public function setHasTreasure(bool $hasTreasure): self

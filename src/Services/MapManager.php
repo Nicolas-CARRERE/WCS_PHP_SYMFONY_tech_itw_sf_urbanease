@@ -37,6 +37,10 @@ class MapManager
     {
         $tile = $this->tileRepository->findOneBy(['coordX' => $boat->getCoordX(), 'coordY' => $boat->getCoordY()]);
         
-        return $tile !== null && $tile->getHasTreasure() === true;
+        if ($tile === null) {
+            return false;
+        }
+        
+        return $tile->getHasTreasure();
     }
 }
