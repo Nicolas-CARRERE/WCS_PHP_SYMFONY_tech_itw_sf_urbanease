@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Boat;
 use App\Form\BoatType;
 use App\Repository\BoatRepository;
+use App\Services\MapManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,49 @@ class BoatController extends AbstractController
         $boat->setCoordY($y);
 
         $em->flush();
+
+        return $this->redirectToRoute('map');
+    }
+
+    /**
+     * Move the boat by direction (N, S, E, W)
+     * @Route("/direction/{direction}", name="moveDirection", requirements={"direction"="[NSEW]"})
+     */
+    public function moveDirection(string $direction, BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $mapManager): Response
+    {
+        $boat = $boatRepository->findOneBy([]);
+        
+        $newX = $boat->getCoordX();
+        $newY = $boat->getCoordY();
+        
+        switch ($direction) {
+            case 'N':
+                $newY = $boat->getCoordY() + 1;
+                break;
+            case 'S':
+                $newY = $boat->getCoordY() - 1;
+                break;
+            case 'E':
+                $newX = $boat->getCoordX() + 1;
+                break;
+            case 'W':
+                $newX = $boat->getCoordX() - 1;
+                break;
+        }
+
+        if (!$mapManager->tileExists($newX, $newY)) {
+            $this->addFlash('error', 'You cannot move there!');
+            return $this->redirectToRoute('map');
+        }
+
+        $boat->setCoordX($newX);
+        $boat->setCoordY($newY);
+
+        $em->flush();
+
+        if ($mapManager->checkTreasure($boat)) {
+            $this->addFlash('success', 'Treasure found! You win!');
+        }
 
         return $this->redirectToRoute('map');
     }

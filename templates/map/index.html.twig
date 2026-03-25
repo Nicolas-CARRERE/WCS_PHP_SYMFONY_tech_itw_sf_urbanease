@@ -34,11 +34,19 @@
             <div class="col-2">
                 <div class="infos">
                     <h2>Information</h2>
-                    {# Add here informations about current ship position #}
+                    <p><strong>Coordinates:</strong> X: {{ boat.coordX }}, Y: {{ boat.coordY }}</p>
+                    <p><strong>Tile Type:</strong> {{ map[boat.coordX][boat.coordY].type ?? 'Unknown' }}</p>
                 </div>
                 <div class="navigation">
                     <h2>Navigation</h2>
-                    {# Add here N/S/E/W buttons #}
+                    <div class="d-flex flex-column align-items-center">
+                        <a href="{{ path('moveDirection', {direction: 'N'}) }}" class="btn btn-primary mb-2">N</a>
+                        <div class="d-flex">
+                            <a href="{{ path('moveDirection', {direction: 'W'}) }}" class="btn btn-primary me-2">W</a>
+                            <a href="{{ path('moveDirection', {direction: 'E'}) }}" class="btn btn-primary">E</a>
+                        </div>
+                        <a href="{{ path('moveDirection', {direction: 'S'}) }}" class="btn btn-primary mt-2">S</a>
+                    </div>
                 </div>
             </div>
         </div>
