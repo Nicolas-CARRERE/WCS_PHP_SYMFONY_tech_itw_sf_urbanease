@@ -15,9 +15,8 @@ class MapController extends AbstractController
     /**
      * @Route("/map", name="map")
      */
-    public function displayMap(BoatRepository $boatRepository) :Response
+    public function displayMap(BoatRepository $boatRepository, EntityManagerInterface $em) :Response
     {
-        $em = $this->getDoctrine()->getManager();
         $tiles = $em->getRepository(Tile::class)->findAll();
 
         foreach ($tiles as $tile) {
@@ -39,6 +38,9 @@ class MapController extends AbstractController
     public function start(BoatRepository $boatRepository, EntityManagerInterface $em, MapManager $mapManager): Response
     {
         $boat = $boatRepository->findOneBy([]);
+        if (!$boat) {
+            throw $this->createNotFoundException('No boat found');
+        }
         $boat->setCoordX(0);
         $boat->setCoordY(0);
 
