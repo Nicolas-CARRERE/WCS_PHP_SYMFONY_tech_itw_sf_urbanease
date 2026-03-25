@@ -52,10 +52,10 @@ class BoatController extends AbstractController
         
         switch ($direction) {
             case 'N':
-                $newY = $boat->getCoordY() + 1;
+                $newY = $boat->getCoordY() - 1;
                 break;
             case 'S':
-                $newY = $boat->getCoordY() - 1;
+                $newY = $boat->getCoordY() + 1;
                 break;
             case 'E':
                 $newX = $boat->getCoordX() + 1;
