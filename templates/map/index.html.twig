@@ -39,13 +39,12 @@
                 </div>
                 <div class="navigation">
                     <h2>Navigation</h2>
-                    <div class="d-flex flex-column align-items-center">
-                        <a href="{{ path('moveDirection', {direction: 'N'}) }}" class="btn btn-primary mb-2">N</a>
-                        <div class="d-flex">
-                            <a href="{{ path('moveDirection', {direction: 'W'}) }}" class="btn btn-primary me-2">W</a>
-                            <a href="{{ path('moveDirection', {direction: 'E'}) }}" class="btn btn-primary">E</a>
-                        </div>
-                        <a href="{{ path('moveDirection', {direction: 'S'}) }}" class="btn btn-primary mt-2">S</a>
+                    <div class="navigation-buttons">
+                        <a href="{{ path('moveDirection', {direction: 'N'}) }}" class="nav-btn north" title="North">N</a>
+                        <a href="{{ path('moveDirection', {direction: 'W'}) }}" class="nav-btn west" title="West">W</a>
+                        <a href="#" class="nav-btn nav-btn-center" title="Current">⚓</a>
+                        <a href="{{ path('moveDirection', {direction: 'E'}) }}" class="nav-btn east" title="East">E</a>
+                        <a href="{{ path('moveDirection', {direction: 'S'}) }}" class="nav-btn south" title="South">S</a>
                     </div>
                 </div>
             </div>

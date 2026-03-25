@@ -85,3 +85,81 @@ blockquote {
     margin-top:0.5em;
 }
 
+/* Flash Messages - Pirate Theme */
+.alert {
+    font-family: Caribbean, sans-serif;
+    border-radius: 8px;
+    border: 2px solid;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    margin-top: 1em;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #2d5016 0%, #4a7c23 100%);
+    border-color: #8b9a4a;
+    color: #f4e4c1 !important;
+}
+
+.alert-error, .alert-danger {
+    background: linear-gradient(135deg, #5a1a1a 0%, #8b2626 100%);
+    border-color: #ff4444;
+    color: #f4e4c1 !important;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #5a4a1a 0%, #8b7626 100%);
+    border-color: #ffd700;
+    color: #f4e4c1 !important;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #1a3a5a 0%, #26548b 100%);
+    border-color: #44aaff;
+    color: #f4e4c1 !important;
+}
+
+/* Visual Hierarchy - Pirate Theme */
+.navbar {
+    background: linear-gradient(180deg, #2a1810 0%, #4a3020 100%) !important;
+    border-bottom: 3px solid #8b7355;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.navbar-brand, .nav-link {
+    font-family: Caribbean, sans-serif;
+    font-size: 1.2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #ffd700 !important;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 2em;
+    margin-top: 2em;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    border: 2px solid #8b7355;
+}
+
+h1 {
+    font-size: 2.5em;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.8);
+    border-bottom: 3px solid #8b7355;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+    color: #ffd700 !important;
+}
+
+h2 {
+    font-size: 1.8em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    color: #f4e4c1 !important;
+    border-bottom: 2px solid #8b7355;
+    padding-bottom: 0.3em;
+}
+
